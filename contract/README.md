@@ -6,15 +6,17 @@ Descripción: En toda operación entre pares en redes decentralizadas y anónima
 Con TrustMe, intentamos quebrar esa barrera brindando un servicio de registro de reputación de miembros de una comunidad (community-based), o bien una red (blockchain-based).
 
 Operaciones: 
-   * Permitir _consultar la confianza_ (ranking) de la contraparte en la comunidad antes de realizar una transacción.
-   * Permitir _registrar la confianza_ de la contraparte luego de realizar una transacción.
-   * Permitir _registrar la desconfianza_ de la contraparte luego de realizar una transacción. 
+   * Permitir _consultar la confianza_ (ranking) de un miembro en la comunidad antes de realizar una transacción.
+   * Permitir _registrar la confianza_ de un miembro luego de realizar una transacción.
+   * Permitir _registrar la desconfianza_ de un miembro luego de realizar una transacción. 
    * Permitir consultar los _confiantes_ de un miembro de la comunidad. 
    * Permitir consultar los _confidentes_ de un miembro en la comunidad.
    * Permitir consultar _mis confiantes_ dentro de la comunidad.
    * Permitir consultar _mis confidentes_ dentro de la comunidad.
    * Permitir consultar un ranking de miembros con mayor confianza.
    * Permitir consultar un ranking de miembros con menos confianza.
+
+Obs: Cada miembro dentro de la comunidad se identifica con su _NEAR account ID_ 
 
 
 Quick Start
