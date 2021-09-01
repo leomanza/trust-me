@@ -2,15 +2,19 @@ trust-me Smart Contract
 ==================
 
 ## Manejo de reputación de pares en aplicaciones de negocios p2p desentralizados.  ##
-Descripción: En toda operación entre pares en redes decentralizadas y anónimas, ya sea para una operación de transferencia de tokens, o bien en donde un recurso (tangible o no tamgible) es utilizado como parte de una transacción, es necesario establecer una relación de confianza entre las partes (aka pares o peers).
+Descripción: En toda operación entre pares en redes decentralizadas y anónimas, ya sea para una operación de transferencia de tokens, o bien en donde un recurso (tangible o no intangible) es utilizado como parte de una transacción, es necesario establecer una relación de confianza entre las partes (aka pares o peers).
 Con TrustMe, intentamos quebrar esa barrera brindando un servicio de registro de reputación de miembros de una comunidad (community-based), o bien una red (blockchain-based).
 
 Operaciones: 
    * Permitir _consultar la confianza_ (ranking) de la contraparte en la comunidad antes de realizar una transacción.
    * Permitir _registrar la confianza_ de la contraparte luego de realizar una transacción.
    * Permitir _registrar la desconfianza_ de la contraparte luego de realizar una transacción. 
-   * Permitir consultar los confiantes de un miembro de la comunidad. 
-   * Permitir consultar los confidentes de un miembro en la comunidad.
+   * Permitir consultar los _confiantes_ de un miembro de la comunidad. 
+   * Permitir consultar los _confidentes_ de un miembro en la comunidad.
+   * Permitir consultar _mis confiantes_ dentro de la comunidad.
+   * Permitir consultar _mis confidentes_ dentro de la comunidad.
+   * Permitir consultar un ranking de miembros con mayor confianza.
+   * Permitir consultar un ranking de miembros con menos confianza.
 
 
 Quick Start
