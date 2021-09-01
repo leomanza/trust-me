@@ -9,7 +9,7 @@ Operaciones:
    * Permitir _consultar la confianza_ (ranking) de la contraparte en la comunidad antes de realizar una transacción.
    * Permitir _registrar la confianza_ de la contraparte luego de realizar una transacción.
    * Permitir _registrar la desconfianza_ de la contraparte luego de realizar una transacción. 
-   * Permitir consultar los confinates de un miembro de la comunidad. 
+   * Permitir consultar los confiantes de un miembro de la comunidad. 
    * Permitir consultar los confidentes de un miembro en la comunidad.
 
 
