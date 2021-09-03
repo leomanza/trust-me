@@ -65,7 +65,19 @@ Donde CONTRACT_ACCOUNT_ID es el account Id del contrato y ACCOUNT_ID es el accou
 
 ...TODO completar con el resto de los comandos
 
-
+# UI mockups de Trust-me
+Para este proyecto pensamos en una UI sencilla, la cual tendría una mayor funcionalidad al momento de realizar conexiones con Amazon, Ebay, Mercado libre y más. Las acciones que podemos realizar en esta UI son:
+    * Ver a los mejores vendedores por plataforma.
+    * Crear una cuenta usando tu cuenta de mainet.
+    * Iniciar sesión usando tu cuenta de mainet y tu contraseña.
+    * Ver el perfíl de los vendedores/compradores donde podremos ver:
+        * Cuanta gente confía o desconfía en el/ella.
+        * Su cantidad de ventas/compras.
+        * Los comentarios de otros usuarios sobre esta persona.
+        * Poder evaluar a este usuarios.
+    * Buscar a los usuarios por su id de mainet.
+    * Evaluar a los demás usuarios, usando su id, el número de transacción de venta/compra, evaluarlo como vendedor/comprador y comentarios sobre el usuario.
+Estos diseños se pueden encontrar y navegar por ellos aquí: https://marvelapp.com/prototype/7541b96/screen/81825604
 
 
 
