@@ -5,7 +5,7 @@
 En toda operación entre pares en redes decentralizadas y anónimas, ya sea para una operación de transferencia de tokens, o bien en donde un recurso (tangible o no intangible) es utilizado como parte de una transacción, es necesario establecer una relación de confianza entre las partes (aka pares o peers).
 Con TrustMe, intentamos quebrar esa barrera brindando un servicio de registro de reputación de miembros de una comunidad (community-based), o bien una red (blockchain-based).
 
-# 🏭 trus-tme permitira realizar las siguientes operaciones
+# 🏭 trust-me permitirá realizar las siguientes operaciones
    * _consultar el nivel de confianza_ de un miembro en la comunidad antes de realizar una transacción.
    * _registrar la confianza_ de un miembro luego de realizar una transacción.
    * _registrar la desconfianza_ de un miembro luego de realizar una transacción. 
