@@ -1,40 +1,81 @@
-/*
- * This is an example of an AssemblyScript smart contract with two simple,
- * symmetric functions:
- *
- * 1. setGreeting: accepts a greeting, such as "howdy", and records it for the
- *    user (account_id) who sent the request
- * 2. getGreeting: accepts an account_id and returns the greeting saved for it,
- *    defaulting to "Hello"
- *
- * Learn more about writing NEAR smart contracts with AssemblyScript:
- * https://docs.near.org/docs/develop/contracts/as/intro
- *
- */
+import { Context, logging, ReceiptIndex } from "near-sdk-as";
+import { trustRanking, trustRecords, TrustRecord } from "./model";
 
-import { Context, logging, storage } from 'near-sdk-as'
-
-const DEFAULT_MESSAGE = 'Hello'
-
-// Exported functions will be part of the public interface for your smart contract.
-// Feel free to extract behavior to non-exported functions!
-export function getGreeting(accountId: string): string | null {
-  // This uses raw `storage.get`, a low-level way to interact with on-chain
-  // storage for simple contracts.
-  // If you have something more complex, check out persistent collections:
-  // https://docs.near.org/docs/concepts/data-storage#assemblyscript-collection-types
-  return storage.get<string>(accountId, DEFAULT_MESSAGE)
+// Obtener el nivel de confianza de un usuario
+export function getConfianza(accountId: string): number | null {
+  if (trustRanking.contains(accountId)){
+    return <i32>trustRanking.get(accountId);
+  }
+  return 0;
 }
 
-export function setGreeting(message: string): void {
-  const account_id = Context.sender
+// Obtener los confiantes de un usuario
+export function getConfiantes(accountId: string) : Array<TrustRecord> {
+  const result = new Array<TrustRecord>();
+  for(let i = 0; i < trustRecords.length; i++) {
+    if (trustRecords[i].accountId === accountId && trustRecords[i].trust) {
+      result.push(trustRecords[i]);
+    }
+  }
+  return result;
+}
 
-  // Use logging.log to record logs permanently to the blockchain!
-  logging.log(
-    // String interpolation (`like ${this}`) is a work in progress:
-    // https://github.com/AssemblyScript/assemblyscript/pull/1115
-    'Saving greeting "' + message + '" for account "' + account_id + '"'
-  )
+// Obtener los confidentes de un usuario
+export function getConfidentes(accountId: string) : Array<TrustRecord> {
+  const result = new Array<TrustRecord>();
+  for(let i = 0; i < trustRecords.length; i++) {
+    if (trustRecords[i].sender === accountId && trustRecords[i].trust) {
+      result.push(trustRecords[i]);
+    }
+  }
+  return result;
+}
 
-  storage.set(account_id, message)
+// Obtener mis confiantes
+export function getMisConfiantes() : Array<TrustRecord> {
+  const accountId = Context.sender;
+  const result = new Array<TrustRecord>();
+  for(let i = 0; i < trustRecords.length; i++) {
+    if (trustRecords[i].accountId === accountId && trustRecords[i].trust) {
+      result.push(trustRecords[i]);
+    }
+  }
+  return result;
+}
+
+// Obtener mis confidentes
+export function getMisConfidentes() : Array<TrustRecord> {
+  const accountId = Context.sender;
+  const result = new Array<TrustRecord>();
+  for(let i = 0; i < trustRecords.length; i++) {
+    if (trustRecords[i].sender === accountId && trustRecords[i].trust) {
+      result.push(trustRecords[i]);
+    }
+  }
+  return result;
+}
+
+// Confiar
+export function confiar(accountId: string, comment: string, relatedTx: string): number {
+  const record = new TrustRecord(true, accountId, comment, relatedTx);
+  trustRecords.push(record);
+  if (trustRanking.contains(accountId)) {
+    const currentRanking = trustRanking.getSome(accountId);
+    trustRanking.set(accountId, currentRanking + 1);
+  } else {
+    trustRanking.set(accountId, 1);
+  }
+  return trustRanking.getSome(accountId);
+}
+
+// Desconfiar
+export function desconfiar(accountId: string, comment: string, relatedTx: string): void {
+  const record = new TrustRecord(false, accountId, comment, relatedTx);
+  trustRecords.push(record);
+  if (trustRanking.contains(accountId)) {
+    const currentRanking = trustRanking.getSome(accountId);
+    trustRanking.set(accountId, currentRanking - 1);
+  } else {
+    trustRanking.set(accountId, -1);
+  }
 }
