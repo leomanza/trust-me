@@ -15,7 +15,19 @@ export class TrustRecord {
     this.sender = context.sender;
   }
 }
+
+@nearBindgen
+export class TrustCounters {
+  trustCount: number;
+  mistrustCount: number;
+  constructor(_trustCount: number, _missTrustCount: number) {
+    this.trustCount = _trustCount;
+    this.mistrustCount = _missTrustCount;
+  }
+}
 // store trust records.
 export let trustRecords = new PersistentVector<TrustRecord>("r");
-// store trust ranking. 
-export let trustRanking = new PersistentMap<string, i32>("c");
+// store number of trusted records. 
+export let trustedCounter = new PersistentMap<string, i32>("t");
+// store number of mistrusted records.
+export let mistrustedCounter = new PersistentMap<string, i32>("m");

@@ -55,15 +55,45 @@ yarn dev:deploy:contract
 ```
 
 🚂 Correr comandos
-Una vez deployado el contrato, usaremos el Account Id devuelto por la operacion para ejecutar los comandos
+Una vez deployado el contrato, usaremos el Account Id devuelto por la operacion para ejecutar los comandos, que será el account Id del contrato [será utilizado como CONTRACT_ACCOUNT_ID en los ejemplos de comandos]
 
-Por ejemplo para registrar la confianza de un usuario ejecutaremos:
+Utilizaremos ACCOUNT_ID para identificar el account Id que utilizamos para autorizar la app.
+
+### Registrar confianza en un usuario
 ```bash
-near call CONTRACT_ACCOUNT_ID trust '{"accountId": "juan.testnet", "comment":"todo perfecto", "relatedTx":"-"}' --account-id ACCOUNT_ID
+near call CONTRACT_ACCOUNT_ID confiar '{"accountId": "juan.testnet", "comment":"todo perfecto", "relatedTx":"6ZSbdHZFkKGxnrYiY9fyym2uShbJYSLmzPSizJfX5Eee"}' --account-id ACCOUNT_ID
 ```
-Donde CONTRACT_ACCOUNT_ID es el account Id del contrato y ACCOUNT_ID es el account Id que utilizamos para autorizar la app
 
-...TODO completar con el resto de los comandos
+### Registrar desconfianza en un usuario
+```bash
+near call CONTRACT_ACCOUNT_ID descofiar '{"accountId": "juan.testnet", "comment":"vendedor poco confiable", "relatedTx":"6ZSbdHZFkKGxnrYiY9fyym2uShbJYSLmzPSizJfX5Eee"}' --account-id ACCOUNT_ID
+```
+
+### Obtener nivel de confianza de un usuario
+```bash
+near view CONTRACT_ACCOUNT_ID getConfianza '{"accountId": "juan.testnet"}'
+```
+
+### Obtener confiantes de un usuario
+```bash
+near call CONTRACT_ACCOUNT_ID getConfiantes '{"accountId":"juan.testnet"}' --accountId ACCOUNT_ID
+```
+
+### Obtener confidentes de un usuario
+```bash
+near call CONTRACT_ACCOUNT_ID getConfidentes '{"accountId":"juan.testnet"}' --accountId ACCOUNT_ID
+```
+
+### Obtener mis confiantes
+```bash
+near call CONTRACT_ACCOUNT_ID getMisConfiantes '{}' --accountId ACCOUNT_ID
+```
+
+### Obtener mis confidentes
+```bash
+near call CONTRACT_ACCOUNT_ID getMisConfidentes '{}' --accountId ACCOUNT_ID
+```
+
 
 # UI mockups de Trust-me
 Para este proyecto pensamos en una UI sencilla, la cual tendría una mayor funcionalidad al momento de realizar conexiones con Amazon, Ebay, Mercado libre y más. Las acciones que podemos realizar en esta UI son:
