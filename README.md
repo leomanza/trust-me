@@ -41,6 +41,7 @@ Cada miembro dentro de la comunidad se identifica con su _NEAR account ID_
 🐑 Clonar el Repositorio
 ```bash
 git clone https://github.com/leomanza/trust-me.git
+cd trust-me
 ```
 
 🏗 instalar y compilar el contrato
