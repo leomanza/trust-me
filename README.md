@@ -96,8 +96,8 @@ near call CONTRACT_ACCOUNT_ID getMisConfidentes '{}' --accountId ACCOUNT_ID
 ```
 
 
-# UI mockups de Trust-me
-Para este proyecto pensamos en una UI sencilla, la cual tendría una mayor funcionalidad al momento de realizar conexiones con Amazon, Ebay, Mercado libre y más. Las acciones que podemos realizar en esta UI son:
+# Caso de uso: Confianza de vendedores y compradores de una plataforma de e-commerce.
+Para este caso de uso pensamos en una UI sencilla, la cual tendría una mayor funcionalidad al momento de realizar conexiones con Amazon, Ebay, Mercado libre y más. Las acciones que podemos realizar en esta UI son:
    * _consultar el nivel de confianza_ de un miembro en la comunidad antes de realizar una transacción.
    * Ver a los mejores vendedores por plataforma.
    * Crear una cuenta usando tu cuenta de mainet.
