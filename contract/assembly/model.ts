@@ -1,4 +1,4 @@
-import { context, PersistentVector, PersistentMap } from "near-sdk-as";
+import { context, PersistentVector, PersistentMap, PersistentUnorderedMap } from "near-sdk-as";
 
 @nearBindgen
 export class TrustRecord {
@@ -7,27 +7,26 @@ export class TrustRecord {
   comment: string;
   relatedTx: string;
   sender: string;
-  constructor(_trust: boolean, _accountId: string, _comment: string, _relatedTx: string) {
+  constructor(_trust: boolean, _accountId: string, _comment: string, _relatedTx: string, _sender: string) {
     this.trust = _trust;
     this.comment = _comment;
     this.relatedTx = _relatedTx;
     this.accountId = _accountId;
-    this.sender = context.sender;
+    this.sender = _sender;
   }
 }
 
 @nearBindgen
 export class TrustCounters {
-  trustCount: number;
-  mistrustCount: number;
-  constructor(_trustCount: number, _missTrustCount: number) {
+  trustCount: i32;
+  mistrustCount: i32;
+  constructor(_trustCount: i32, _missTrustCount: i32) {
     this.trustCount = _trustCount;
     this.mistrustCount = _missTrustCount;
   }
 }
+
 // store trust records.
 export let trustRecords = new PersistentVector<TrustRecord>("r");
-// store number of trusted records. 
-export let trustedCounter = new PersistentMap<string, i32>("t");
-// store number of mistrusted records.
-export let mistrustedCounter = new PersistentMap<string, i32>("m");
+// store number of trusted and mistrusted records of a given account 
+export let trustCounter = new PersistentUnorderedMap<string, TrustCounters>("t");

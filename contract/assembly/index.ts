@@ -1,20 +1,17 @@
-import { Context, logging, ReceiptIndex } from "near-sdk-as";
-import { trustedCounter, mistrustedCounter, trustRecords, TrustRecord, TrustCounters } from "./model";
+import { Context, logging, ReceiptIndex, MapEntry } from "near-sdk-as";
+import { trustCounter, trustRecords, TrustRecord, TrustCounters } from "./model";
 
 // Obtener el nivel de confianza de un usuario
 export function getConfianza(accountId: string): TrustCounters | null {
-  if (trustedCounter.contains(accountId) && mistrustedCounter.contains(accountId)) {
-    const trustCount = trustedCounter.getSome(accountId);
-    const mistrustCount = mistrustedCounter.getSome(accountId)
-    const trustCounters = new TrustCounters(trustCount, mistrustCount);
-    return trustCounters;
+  if (trustCounter.contains(accountId)) {
+    return trustCounter.getSome(accountId);
   }
   return null;
 }
 
 // Obtener los confiantes de un usuario. [Aquellos en los que confian en el usuario] 
 export function getConfiantes(accountId: string) : Array<TrustRecord> {
-  assert(trustedCounter.contains(accountId), "la cuenta no existe en los registros")
+  assert(trustCounter.contains(accountId), "la cuenta no existe en los registros")
   const result = new Array<TrustRecord>();
   for(let i = 0; i < trustRecords.length; i++) {
     if (trustRecords[i].accountId == accountId && trustRecords[i].trust) {
@@ -26,6 +23,7 @@ export function getConfiantes(accountId: string) : Array<TrustRecord> {
 
 // Obtener los confidentes de un usuario. [Aquellos en los que el usuario confia] 
 export function getConfidentes(accountId: string) : Array<TrustRecord> {
+  assert(trustRecords.length > 0, "no existen registros");
   const result = new Array<TrustRecord>();
   for(let i = 0; i < trustRecords.length; i++) {
     if (trustRecords[i].sender == accountId && trustRecords[i].trust) {
@@ -38,7 +36,7 @@ export function getConfidentes(accountId: string) : Array<TrustRecord> {
 // Obtener mis confiantes. [Aquellos en los que confian en mi]
 export function getMisConfiantes() : Array<TrustRecord> {
   const accountId = Context.sender;
-  assert(trustedCounter.contains(accountId), "no tienes registros de confianza")
+  assert(trustCounter.contains(accountId), "no tienes registros de confianza")
   const result = new Array<TrustRecord>();
   for(let i = 0; i < trustRecords.length; i++) {
     if (trustRecords[i].accountId == accountId && trustRecords[i].trust) {
@@ -50,8 +48,8 @@ export function getMisConfiantes() : Array<TrustRecord> {
 
 // Obtener mis confidentes. [Aquellos en los que yo confio] 
 export function getMisConfidentes() : Array<TrustRecord> {
+  assert(trustRecords.length > 0, "no existen registros");
   const accountId = Context.sender;
-  logging.log(`sender ${Context.sender}`);
   const result = new Array<TrustRecord>();
   for(let i = 0; i < trustRecords.length; i++) {
     if (trustRecords[i].sender == accountId && trustRecords[i].trust) {
@@ -61,44 +59,34 @@ export function getMisConfidentes() : Array<TrustRecord> {
   return result;
 }
 
-// Confiar.
+// Registrar confianza. Retorna cantidad de registros de confianza y cantidad de registros de desconfianza del usuario. 
 export function confiar(accountId: string, comment: string, relatedTx: string): TrustCounters {
-  const record = new TrustRecord(true, accountId, comment, relatedTx);
+  const record = new TrustRecord(true, accountId, comment, relatedTx, Context.sender);
   trustRecords.push(record);
-  if (trustedCounter.contains(accountId)) {
-    const trustCount = trustedCounter.getSome(accountId);
-    trustedCounter.set(accountId, trustCount + 1);
+  if (trustCounter.contains(accountId)) {
+    const accountTrust = trustCounter.getSome(accountId);
+    accountTrust.trustCount = accountTrust.trustCount + 1;
+    trustCounter.set(accountId, accountTrust);
   } else {
-    trustedCounter.set(accountId, 1);
+    trustCounter.set(accountId, new TrustCounters(1,0));
   }
-  // inicializar contador de desconfianza si no existe registro aun
-  if (!mistrustedCounter.contains(accountId)) {
-    mistrustedCounter.set(accountId, 0);
-  }
-  const trustCount = trustedCounter.getSome(accountId);
-  const mistrustCount = mistrustedCounter.getSome(accountId)
-  const trustCounters = new TrustCounters(trustCount, mistrustCount);
-  return trustCounters;
+  
+  return trustCounter.getSome(accountId);
 }
 
-// Desconfiar
+// Registrar desconfianza. Retorna cantidad de registros de confianza y cantidad de registros de desconfianza del usuario. 
 export function desconfiar(accountId: string, comment: string, relatedTx: string): TrustCounters {
-  const record = new TrustRecord(false, accountId, comment, relatedTx);
+  const record = new TrustRecord(false, accountId, comment, relatedTx, Context.sender);
   trustRecords.push(record);
-  if (mistrustedCounter.contains(accountId)) {
-    const mistrustCount = mistrustedCounter.getSome(accountId);
-    mistrustedCounter.set(accountId, mistrustCount + 1);
+  if (trustCounter.contains(accountId)) {
+    const accountTrust = trustCounter.getSome(accountId);
+    accountTrust.mistrustCount = accountTrust.mistrustCount + 1;
+    trustCounter.set(accountId, accountTrust);
   } else {
-    mistrustedCounter.set(accountId, 1);
+    trustCounter.set(accountId, new TrustCounters(0,1));
   }
-  // inicializar contador de confianza si no existe registro aun
-  if (!trustedCounter.contains(accountId)) {
-    trustedCounter.set(accountId, 0);
-  }
-  const trustCount = trustedCounter.getSome(accountId);
-  const mistrustCount = mistrustedCounter.getSome(accountId)
-  const trustCounters = new TrustCounters(trustCount, mistrustCount);
-  return trustCounters;
+  
+  return trustCounter.getSome(accountId);
 }
 
 export function getAllRecords(): Array<TrustRecord> {
@@ -107,4 +95,26 @@ export function getAllRecords(): Array<TrustRecord> {
       result.push(trustRecords[i]);
   }
   return result;
+}
+
+export function getTopTrusted(limit: i32): Array<MapEntry<string, TrustCounters>> {
+  assert(trustRecords.length > 0, "no existen registros");
+  const values = trustCounter.entries().sort((a, b) => 
+    { 
+      if (a.value.trustCount - a.value.mistrustCount > b.value.trustCount - b.value.mistrustCount) return -1;
+      if (a.value.trustCount - a.value.mistrustCount < b.value.trustCount - b.value.mistrustCount) return 1;
+      return 0;
+    });
+  return values.slice(0, limit);
+}
+
+export function getBottomTrusted(limit: i32): Array<MapEntry<string, TrustCounters>> {
+  assert(trustRecords.length > 0, "no existen registros");
+  const values = trustCounter.entries().sort((a, b) => 
+    {  
+      if (a.value.trustCount - a.value.mistrustCount > b.value.trustCount - b.value.mistrustCount) return 1;
+      if (a.value.trustCount - a.value.mistrustCount < b.value.trustCount - b.value.mistrustCount) return -1;
+      return 0;
+     });
+  return values.slice(0, limit);
 }
