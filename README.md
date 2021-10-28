@@ -19,7 +19,7 @@ Con TrustMe, intentamos quebrar esa barrera brindando un servicio de registro de
 Cada miembro dentro de la comunidad se identifica con su _NEAR account ID_ 
 
 # 🏁 Prerequisitos 
-1. node.js >=12 instalado (https://nodejs.org)
+1. node.js >=12 instalado (node.js>=14 preferentemente) (https://nodejs.org)
 2. yarn instalado
     ```bash
     npm install --global yarn
